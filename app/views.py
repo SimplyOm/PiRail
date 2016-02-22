@@ -8,13 +8,13 @@ import json
 import time
 import serial
 import urllib2
-
+'''
 ser = serial.Serial(port = '/dev/ttyUSB0',baudrate = 9600, parity = serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
 GPIO.setmode(GPIO.BCM)
 state=0
 GPIO.setup(23,GPIO.OUT)
 GPIO.output(23,GPIO.LOW)
-
+'''
 railway_api_key='opyoo5828'
 
 north=25.2624715
@@ -124,14 +124,9 @@ def myinfo(pnr):
              return render_template('myyatrainfoerror.html',title='MyYatraInfo')
           train_date=pnr_res_json['train_start_date']
           train_num=pnr_res_json['train_num']
-          origin=pnr_res_json
           response_dict['pnr_info']=pnr_res_json
           doj=str(train_date['year'])+add_zero(train_date['month'])+add_zero(train_date['day'])
-          doj='20160224'
-          train_num='12802'
-          origin='GAYA'
-          dest='BKSC'
-	  try:
+          try:
              live_ob=requests.get('http://api.railwayapi.com/live/train/'+train_num+'/doj/'+doj+'/apikey/'+railway_api_key)
              if live_ob.status_code==requests.codes.ok:
                 live_json=live_ob.json()
