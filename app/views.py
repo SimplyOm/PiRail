@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect
 from app import app, db, models
 from .forms import LoginForm,PNREntry,ImmediateForm
 from .models import User,Chart
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import requests
 import json
 import time
@@ -12,13 +12,14 @@ import urllib2
 '''
 ser1 = serial.Serial(port = '/dev/ttyUSB0',baudrate = 9600, parity = serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
 ser2 = serial.Serial(port = '/dev/ttyACM0',baudrate = 115200, parity = serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
-'''
+
 
 GPIO.setmode(GPIO.BCM)
-state=0
 GPIO.setup(23,GPIO.OUT)
 GPIO.output(23,GPIO.LOW)
+'''
 
+state=0
 railway_api_key='opyoo5828'
 
 north=25.2624715
@@ -49,7 +50,6 @@ def updatestats():
              north=float(string[3])/100
              east=float(string[5])/100
              speed=float(string[7])
-     
      try:
     	data = urllib2.urlopen('http://maps.googleapis.com/maps/api/geocode/xml?latlng='+str(north)+','+str(east)+'&sensor=true')
     	l = []
