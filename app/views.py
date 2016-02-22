@@ -8,10 +8,11 @@ import json
 import time
 import serial
 import urllib2
+
 '''
 ser1 = serial.Serial(port = '/dev/ttyUSB0',baudrate = 9600, parity = serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
-'''
 ser2 = serial.Serial(port = '/dev/ttyACM0',baudrate = 115200, parity = serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
+'''
 
 GPIO.setmode(GPIO.BCM)
 state=0
@@ -22,7 +23,7 @@ railway_api_key='opyoo5828'
 
 north=25.2624715
 east=82.983633
-location='IIT-BHU'
+location='Semi Cir Rd Number 5, Banaras Hindu University Campus,Varanasi, Uttar Pradesh 221005, India'
 speed=0
 humidity=0
 temperature=0
@@ -38,7 +39,8 @@ def controlroom():
 @app.route('/updatestats')
 def updatestats():
      global ser1,ser2,north,east,location,speed,humidity,temperature,ac
-     '''string = ser1.readline()
+     '''
+     string = ser1.readline()
      if (string):
        print string
        if(string[0:6]=='$GPRMC'):
@@ -47,7 +49,7 @@ def updatestats():
              north=float(string[3])/100
              east=float(string[5])/100
              speed=float(string[7])
-     '''
+     
      try:
     	data = urllib2.urlopen('http://maps.googleapis.com/maps/api/geocode/xml?latlng='+str(north)+','+str(east)+'&sensor=true')
     	l = []
@@ -56,6 +58,7 @@ def updatestats():
         location= l[5][21:-21]
      except Exception as e:
         print e
+     
      string=ser2.readline()
      print string
      if string[0:2]=='OK':
@@ -66,7 +69,8 @@ def updatestats():
           print humidity
           temperature=float(string[1])
           ac=int(string[2])
-     st='Your latitude and longitude are '+str(north)+'N '+str(east)+'E.<br>Your current detected location is '+location+'.<br> We are currently travelling at '+str(speed)+'.<br> The current temperature is '+str(temperature)+'.<br> The current humidity is '+str(humidity)+'.<br>The AC is set to '+str(ac)+'.'
+     '''
+     st='Your latitude and longitude are '+str(north)+' N '+str(east)+' E.<br>Your current detected location is '+location+'.<br> We are currently travelling at '+str(speed)+'m/s .<br> The current temperature is '+str(temperature)+' degree C.<br> The current humidity is '+str(humidity)+'.<br>The AC is set to '+str(ac)+'.'
      return st
 
 @app.route('/trial')
@@ -131,8 +135,25 @@ def immediate():
 def trainstats():
     return render_template('trainstats.html',title='Train Statistics');
 
-@app.route('/control')
+@app.route('/control', methods=['GET', 'POST'])
 def control():
+    
+   form=PNREntry()
+   if form.validate_on_submit():
+      pnr=form.pnr.data
+      users=models.Chart.query.all()
+      flag=0
+      for u in users:
+          if pnr==str(u.pnr):
+              flag=1
+              break
+      if flag:    
+          return redirect('/control1/'+pnr)
+      else:
+          flash('Please provide a valid PNR number!')
+          return redirect('/control')
+   return render_template('pnrentry.html',title='Control',form=form,heading="Control")
+   '''
    global state
    if(state==0):
       cur_state='off'
@@ -140,11 +161,20 @@ def control():
    else:
       cur_state='on'
       change_state='off'
-   return render_template('control.html',title='Controls',cur_state=cur_state,change_state=change_state)
+   return render_template('pnrentry.html',title='Controls',cur_state=cur_state,change_state=change_state)
+   '''
 
-@app.route('/control1')
-def control1():
+@app.route('/control1/<pnr>')
+def control1(pnr):
    global state
+   users=models.Chart.query.all()
+   name=''
+   for u in users:
+        if pnr==str(u.pnr):
+              name=u.name
+              seat=u.seat
+              break
+
    if(state==0):
       GPIO.output(23,GPIO.HIGH)
       cur_state='on'
@@ -155,7 +185,7 @@ def control1():
       cur_state='off'
       change_state='on'
       state=0
-   return render_template('control.html',title='Controls',cur_state=cur_state,change_state=change_state)
+   return render_template('control.html',title='Controls',cur_state=cur_state,change_state=change_state,name=name,seat=seat,pnr=pnr)
 
 @app.route('/')
 @app.route('/index')

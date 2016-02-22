@@ -2,5 +2,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h3>The Light is {{ cur_state }}. Turn <a href="/control1">{{ change_state }}</a></h3>
+
+    <h2>Hello {{name}}, now you don't have to get down from your seat or tell someone else to turn on the switch. Team PiRail allows you to do it from wherever you are.<br> Based on your seat number {{seat}}, you have the authority to toggle the following switch.</h2><br>
+    <h3>The Light is {{ cur_state }}. Turn <a href="/control1/{{pnr}}">{{ change_state }}</a></h3>
 {% endblock %}
