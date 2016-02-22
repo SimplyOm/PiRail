@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect
+from flask import render_template, flash, redirect,session,request
 from app import app, db, models
 from .forms import LoginForm,PNREntry,ImmediateForm
 from .models import User,Chart
@@ -6,7 +6,7 @@ from .models import User,Chart
 import requests
 import json
 import time
-import serial
+#import serial
 import urllib2
 
 '''
@@ -98,6 +98,10 @@ def senddatacontrol():
     
 @app.route('/immediate', methods=['GET', 'POST'])
 def immediate():
+    if 'pnr' in session:
+      login=True
+    else:
+      login=False
     form=ImmediateForm()
     global food,secu,medicine,clean
     if form.validate_on_submit():
@@ -129,73 +133,70 @@ def immediate():
       else:
           flash('Please provide a valid PNR number!')
           return redirect('/immediate')
-    return render_template('immediate.html',title='Immediate',form=form)
+    return render_template('immediate.html',title='Immediate',form=form,login=login)
 
 @app.route('/trainstats')
 def trainstats():
     return render_template('trainstats.html',title='Train Statistics');
 
-@app.route('/control', methods=['GET', 'POST'])
-def control():
-    
-   form=PNREntry()
-   if form.validate_on_submit():
-      pnr=form.pnr.data
-      users=models.Chart.query.all()
-      flag=0
-      for u in users:
-          if pnr==str(u.pnr):
-              flag=1
-              break
-      if flag:    
-          return redirect('/control1/'+pnr)
-      else:
-          flash('Please provide a valid PNR number!')
-          return redirect('/control')
-   return render_template('pnrentry.html',title='Control',form=form,heading="Control")
-   '''
-   global state
-   if(state==0):
-      cur_state='off'
-      change_state='on'
-   else:
-      cur_state='on'
-      change_state='off'
-   return render_template('pnrentry.html',title='Controls',cur_state=cur_state,change_state=change_state)
-   '''
-
-@app.route('/control1/<pnr>')
-def control1(pnr):
-   global state
-   users=models.Chart.query.all()
-   name=''
-   for u in users:
-        if pnr==str(u.pnr):
-              name=u.name
-              seat=u.seat
-              break
-
-   if(state==0):
-      GPIO.output(23,GPIO.HIGH)
-      cur_state='on'
-      change_state='off'
-      state=1
-   else:
-      GPIO.output(23,GPIO.LOW)
-      cur_state='off'
-      change_state='on'
-      state=0
-   return render_template('control.html',title='Controls',cur_state=cur_state,change_state=change_state,name=name,seat=seat,pnr=pnr)
-
 @app.route('/')
 @app.route('/index')
 def index():
-    return render_template('index.html',title='WELCOME TO INDIAN RAILWAYS')
+    if 'pnr' in session:
+      login=True
+    else:
+      login=False
+    return render_template('index.html',title='WELCOME TO INDIAN RAILWAYS',login=login)
 
+@app.route('/login',methods=['GET', 'POST'])
+def login():
+  if request.method == 'POST':
+    try:
+      pnr=request.form["pnr"]
+    except:
+      return render_template('index.html',title='WELCOME',login=False,login_error_message='No pnr entered')    
+    try:  
+      password=request.form['password']
+    except:
+      return render_template('index.html',title='WELCOME',login=False,login_error_message='No password entered')
+    if len(pnr)==10:
+      passengers=models.Chart.query.all()
+      print passengers
+      found=False
+      for p in passengers:
+        try:
+          print int(pnr)
+          if p.pnr==int(pnr):
+            found=True
+            break
+        except:
+          return render_template('index.html',title='WELCOME',login=False,login_error_message='characters not allowed in pnr')
+      if found:
+        if password==p.password:
+          session['pnr'] = pnr
+          return render_template('index.html',title='WELCOME',login=True)
+        else:
+          return render_template('index.html',title='WELCOME',login=False,login_error_message='Wrong password provided')          
+      else:
+        return render_template('index.html',title='WELCOME',login=False,login_error_message='You are in the wrong tarin')
+    else:
+      return render_template('index.html',title='WELCOME',login=False,login_error_message='Invalid Pnr')
+  else:  
+    return render_template('index.html',title='WELCOME',login=False)
+
+@app.route('/logout')
+def logout():
+  if 'pnr' in session:
+    session.clear()
+  return render_template('index.html',title='WELCOME TO INDIAN RAILWAYS',login=False)
 
 
 @app.route('/feedback', methods=['GET', 'POST'])
 def feedpnrentry():
+   if 'pnr' in session:
+      login=True
+   else:
+      login=False
    form=PNREntry()
    if form.validate_on_submit():
       pnr=form.pnr.data
@@ -210,12 +211,16 @@ def feedpnrentry():
       else:
           flash('Please provide a valid PNR number!')
           return redirect('/feedback')
-   return render_template('pnrentry.html',title='FEEDBACK',form=form,heading="Feedback")
+   return render_template('pnrentry.html',title='FEEDBACK',form=form,heading="Feedback",login=login)
 
 
 
 @app.route('/feedback/<pnr>', methods=['GET', 'POST'])
 def feedback(pnr):
+    if 'pnr' in session:
+      login=True
+    else:
+      login=False
     form = LoginForm()
     users=models.Chart.query.all()
     name=''
@@ -230,7 +235,7 @@ def feedback(pnr):
 	db.session.add(user)
 	db.session.commit()
         return redirect('/index')
-    return render_template('feedback.html',title='FEEDBACK',name=name,form=form,pnr=pnr)
+    return render_template('feedback.html',title='FEEDBACK',name=name,form=form,pnr=pnr,login=login)
 
 def add_zero(x):
    if x>=10:
@@ -240,15 +245,23 @@ def add_zero(x):
 
 @app.route('/myyatrainfo/',methods=['GET', 'POST'])
 def pnrentry():
+   if 'pnr' in session:
+      login=True
+   else:
+      login=False
    form=PNREntry()
    if form.validate_on_submit():
       pnr=form.pnr.data
       return redirect('/myyatrainfo/'+pnr)
-   return render_template('pnrentry.html',title='MyYatraInfo',form=form,heading="MyYatraInfo")
+   return render_template('pnrentry.html',title='MyYatraInfo',form=form,heading="MyYatraInfo",login=login)
 
    
 @app.route('/myyatrainfo/<pnr>', methods=['GET'])
 def myinfo(pnr):
+   if 'pnr' in session:
+      login=True
+   else:
+      login=False
    response_dict={}
    true,false=[True,False]
    try:
@@ -305,11 +318,11 @@ def myinfo(pnr):
                       response_dict['next']=route
           except Exception as e:
              print e
-             return render_template('myyatrainfoerrnonet.html',title='MyYatraInfo')
+             return render_template('myyatrainfoerrnonet.html',title='MyYatraInfo',login=login)
    except Exception as e:
        print e
-       return render_template('myyatrainfoerrnonet.html',title='MyYatraInfo')
+       return render_template('myyatrainfoerrnonet.html',title='MyYatraInfo',login=login)
    print response_dict
-   return render_template('myyatrainfo.html',title='MyYatraInfo',values=response_dict)
+   return render_template('myyatrainfo.html',title='MyYatraInfo',values=response_dict,login=login)
 
 
