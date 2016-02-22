@@ -1,0 +1,70 @@
+
+<!-- extend base layout -->
+<html>
+  <head>
+    
+    <title>FEEDBACK</title>
+    
+  </head>
+  <body>
+<br>
+    <div align="center"><font size="5"><b>
+	<a href="/index">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="/feedback">Feedback</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="/trainstats">Train Stats</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="/control">Controls</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+	<a href="/myyatrainfo">MyYatraInfo</a></b></font></div> <br><hr> <br>
+    
+    
+    
+    
+    <h1 align="Center">Feedback</h1>
+    <form action="" method="post" name="feedback">
+        <div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value="1456140373##4ee6d296b2465826f83734da2439e39b6f935a97"></div>
+	<hr>
+	PNR: {{ pnr }}
+	<br />
+	<hr>
+	Name : {{ name }}
+	<br />
+	<hr>
+	How would you rate the overall quality of food:
+	<select id="food" name="food" type="text" >
+		
+		<option  > Select </option>
+		<option  > Excellent </option>
+		<option  > Good </option>
+		<option  > Poor </option>
+	</select>
+	<br />
+	<hr>
+	How would you rate the overall sanitory conditions:
+	<select id="sanitation" name="sanitation" type="text">
+		
+		<option  > Select </option>
+		<option  > Excellent </option>
+		<option  > Good </option>
+		<option  > Poor </option>
+	</select>
+	<br />
+	<hr>
+	How would you rate the overall experience of your journey:
+	<select id="journey" name="journey" type="text">
+		
+		<option  > Select </option>
+		<option  > Excellent </option>
+		<option  > Good </option>
+		<option  > Poor </option>
+	</select>
+	<br />
+	<hr>
+	Suggestions:<br />
+	<textarea id="feedback" name="feedback" rows="5" cols="30" placeholder="Please give us your valuable suggestions   "></textarea>
+	<br />
+	<hr>
+	<input type="submit" value="Submit">
+	<hr>
+    </form>
+
+  </body>
+</html>

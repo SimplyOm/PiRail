@@ -1,0 +1,21 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+{% block content %}
+
+<h1 align="center">Immediate</h1>
+
+    <form action="" method="post" name="immediate">
+        {{ form.hidden_tag() }}
+        <ol>
+	<p><li>Please enter your PNR Number: {{ form.pnr }}</li>{% for error in form.pnr.errors %}
+			<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}</p>
+	<p><li>Please select the type of your Emergency : {{ form.typ }}</li>{% for error in form.typ.errors %}
+			<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}</p>
+	<p><li>Please provide more information about your situation:{{ form.query}}</li>{% for error in form.query.errors %}
+			<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}</p></ol>
+        <p><input type="submit" value="Submit"></p>
+     </form>
+{% endblock %}

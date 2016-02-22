@@ -7,16 +7,10 @@
         {{ form.hidden_tag() }}
 	<ol>
         <p><li>
-            PNR NUMBER : {{ form.pnr(size=80) }}
-            {% for error in form.pnr.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}</li>
+            PNR NUMBER : {{ pnr }}
         </p>
         <p>
-            <li>NAME : {{ form.name(size=80) }}
-		{% for error in form.name.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-                {% endfor %}</li>
+            <li>NAME : {{ name }}</li>
             </li>
         </p>
 	<p><li>How would you rate the overall quality of food (excellent/good/poor) : 

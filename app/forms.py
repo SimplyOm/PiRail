@@ -4,8 +4,6 @@ from wtforms.validators import DataRequired
 
 
 class LoginForm(Form):
-    pnr = StringField('pnr', validators=[DataRequired()])
-    name = StringField('name', validators=[DataRequired()])
     food = StringField('food')
     sanitation=StringField('sanitation')
     journey=StringField('radio_journey')
@@ -14,5 +12,7 @@ class LoginForm(Form):
 class PNREntry(Form):
     pnr = StringField('pnr', validators=[DataRequired()])
 
-    
-
+class ImmediateForm(Form):
+    pnr = StringField('pnr', validators=[DataRequired()])
+    typ = RadioField ('typ', choices=[('Food','Food'),('Medical','Medical'),('Cleanliness','Cleanliness'),('Security','Security')], validators=[DataRequired()])
+    query= TextAreaField('feedback', validators=[DataRequired()])

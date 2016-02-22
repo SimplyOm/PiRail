@@ -12,3 +12,12 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % (self.name)
+
+class Chart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    pnr = db.Column(db.Integer, index=True)
+    name = db.Column(db.String(64), index=True)
+    seat = db.Column(db.Integer, index=True)
+
+    def __repr__(self):
+        return '<Chart %r>' % (self.name)

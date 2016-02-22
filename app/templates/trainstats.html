@@ -2,9 +2,24 @@
 {% extends "base.html" %}
 
 {% block content %}
+
+<script>
+window.onload=function(){
+function sendData() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (xhttp.readyState == 4 && xhttp.status == 200) {
+     document.getElementById("fields").innerHTML = xhttp.responseText;
+    }
+  };
+  xhttp.open("GET", "/updatestats", true);
+  xhttp.send();
+}setInterval(sendData,1000)
+};
+</script>
     <h1 align="center">Team PiRail Welcomes you to Indian Railways</h1>
     <br>
-    <h3>You Current location is {{north}}°N {{east}}°E</h3>
-    <h3>You are at {{location}}.</h3>
-    <h3>We are currently travelling at {{speed}}m/s.</h3>
+    <div id="fields"><h3></div><div id="east"></div></h3>
+    <br><br><br>
+    <h5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hope you are enjoying the journey.</h5>
 {% endblock %}
