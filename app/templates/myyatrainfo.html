@@ -1,0 +1,43 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+	<h1 align="center">MyYatraInfo</h1>
+	<h3 align="center">PNR No. : {{ values.pnr_info.pnr }}</h3><br>
+{{ values }}
+<pre>The name of your train is {{values.pnr_info.train_name}}({{values.pnr_info.train_num}}).
+You have {{values.pnr_info.total_passengers}} passengers in this ticket.
+{% if values.pnr_info.chart_prepared=="N" %}The chart has not been prepared yet.
+The train is scheduled to depart from {{ values.origin.station_.name }}({{values.origin.station}}) on {{values.origin.scharr_date}} at {{values.origin.schdep}}.
+The train is scheduled to arrive at {{ values.dest.station_.name }}({{values.dest.station}}) on {{values.dest.scharr_date}} at {{values.dest.scharr}}.
+Hoping to see you at station.
+Thank you.
+{% else %}The chart has been prepared.
+You have been alloted the following seats:{% for passenger in values.pnr_info.passengers %} {{passenger.current_status}};{% endfor %}
+
+{% if values.live.response_code!=200 %}{{values.live.error}}
+{% else %}{% if not values.started %}Your train is not started yet.
+The train is scheduled to depart from {{ values.origin.station_.name }}({{values.origin.station}}) on {{values.origin.scharr_date}} at {{values.origin.schdep}}.
+The train is scheduled to arrive at {{ values.dest.station_.name }}({{values.dest.station}}) on {{values.dest.scharr_date}} at {{values.dest.scharr}}.
+Hoping to see you at station.
+Thank you.
+{% elif values.ended %}Your train has already reached its destination.
+The train departed from {{ values.source.station_.name }}({{values.source.station}}) on {{values.source.scharr_date}} at {{values.source.actdep}} {{values.source.status}}.
+You boarded the train from {{ values.origin.station_.name }}({{values.origin.station}}) on {{values.origin.scharr_date}} at {{values.origin.actdep}} {{values.origin.status}}.
+You reached your destination {{ values.dest.station_.name }}({{values.dest.station}}) on {{values.dest.scharr_date}} at {{values.dest.actarr}} {{values.dest.status}}.
+Thank you for using Indian Railways.
+{% else %}{{ values.live.position }}
+The train departed from {{ values.source.station_.name }}({{values.source.station}}) on {{values.source.scharr_date}} at {{values.source.actdep}} {{values.source.status}}.
+{% if values.origin.has_arrived %}You train arrived at your boarding station {{ values.origin.station_.name }}({{values.origin.station}}) on {{values.origin.scharr_date}} at {{values.origin.actarr}} {{values.origin.status}}.
+{% else %}You train is scheduled to arrive at your boarding station {{ values.origin.station_.name }}({{values.origin.station}}) on {{values.origin.scharr_date}} at {{values.origin.scharr}} {{values.origin.status}}.
+{% endif %}
+{% if values.dest.has_arrived %}You train arrived at your destination {{ values.dest.station_.name }}({{values.dest.station}}) on {{values.dest.scharr_date}} at {{values.dest.actarr}} {{values.dest.status}}.
+Thank you for using Indian Railways.
+{% else %}You train is scheduled to arrive at your destination {{ values.dest.station_.name }}({{values.dest.station}}) on {{values.dest.scharr_date}} at {{values.dest.scharr}} {{values.dest.status}}.
+Hoping you are having a wonderful journey.
+Thank you.
+{% endif %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endblock %}

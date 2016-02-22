@@ -1,0 +1,22 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+	<h1 align="Center">MyYatraInfo</h1><br><br>
+	<form action="" method="post" name="pnrentry">
+        {{ form.hidden_tag() }}
+	<font size="5" align="center">
+        <p>
+		<pre>Enter PNR No.:   {{ form.pnr(size=10) }}</pre>
+		{% for error in form.pnr.errors %}
+			<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}
+        </p>
+        <p><input type="submit" value="Submit"></p>
+	</font>
+	</form>
+{% endblock %}
+
+
+
+

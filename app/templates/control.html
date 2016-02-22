@@ -1,0 +1,6 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h3>The Light is {{ cur_state }}. Turn <a href="/control1">{{ change_state }}</a></h3>
+{% endblock %}

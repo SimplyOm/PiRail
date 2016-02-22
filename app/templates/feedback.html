@@ -1,0 +1,36 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 align="Center">Feedback</h1>
+    <form action="" method="post" name="feedback">
+        {{ form.hidden_tag() }}
+	<ol>
+        <p><li>
+            PNR NUMBER : {{ form.pnr(size=80) }}
+            {% for error in form.pnr.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}</li>
+        </p>
+        <p>
+            <li>NAME : {{ form.name(size=80) }}
+		{% for error in form.name.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}</li>
+            </li>
+        </p>
+	<p><li>How would you rate the overall quality of food (excellent/good/poor) : 
+        {{ form.food }}</li></p>
+	<p><li>How would you rate the overall sanitory conditions (excellent/good/poor) : 
+        {{ form.sanitation }}</li></p>
+	<p><li>How would you rate the overall experience of your journey (satisfactory/unsatisfactory): 
+        {{ form.journey}}</li></p>
+	<p><li> Any suggestions : </li></p><br>
+	{{ form.feedback }}
+        <p><input type="submit" value="Submit"></p>
+    </form>
+{% endblock %}
+
+
+
+

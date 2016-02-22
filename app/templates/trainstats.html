@@ -1,0 +1,10 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 align="center">Team PiRail Welcomes you to Indian Railways</h1>
+    <br>
+    <h3>You Current location is {{north}}°N {{east}}°E</h3>
+    <h3>You are at {{location}}.</h3>
+    <h3>We are currently travelling at {{speed}}m/s.</h3>
+{% endblock %}
