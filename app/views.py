@@ -10,11 +10,12 @@ import serial
 import urllib2
 '''
 ser = serial.Serial(port = '/dev/ttyUSB0',baudrate = 9600, parity = serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
+'''
 GPIO.setmode(GPIO.BCM)
 state=0
 GPIO.setup(23,GPIO.OUT)
 GPIO.output(23,GPIO.LOW)
-'''
+
 railway_api_key='opyoo5828'
 
 north=25.2624715
