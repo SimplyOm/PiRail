@@ -19,6 +19,7 @@ class Chart(db.Model):
     name = db.Column(db.String(64), index=True)
     seat = db.Column(db.Integer, index=True)
     password=db.Column(db.String(4),index=True)
+    mobile=db.Column(db.String(10),index=True)
 
     def __repr__(self):
         return '<Chart %r>' % (self.name)

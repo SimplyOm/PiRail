@@ -8,7 +8,26 @@
   </head>
   <body>
 <br>
-    <div align="center"><font size="5"><b><a href="/index">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/feedback">Feedback</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/immediate">Immediate</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/control">Controls</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/myyatrainfo">MyYatraInfo</a></b></font></div> <br><hr> <br>
+    <div align="center"><font size="5"><b><a href="/index">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/feedback">Feedback</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/immediate">Immediate</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/control">Controls</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/myyatrainfo">MyYatraInfo</a></b></font></div>
+    <br/>
+    <div align="right">
+    {% if login %}
+        <a href="/logout">Logout</a>
+    {% else %}
+        <form action="/login" method="post" name="login">
+            <div style="display:none;"><input id="csrf_token" name="csrf_token" type="hidden" value="1456140373##4ee6d296b2465826f83734da2439e39b6f935a97"></div>
+            <input name="pnr" placeholder="Pnr No"></input>
+            <input name="password" type="password" placeholder="Password"></input>
+            <input type="submit" value="Login"></input>
+        </form>
+    {% endif %}
+    </div>
+    {% if login_error_message %}
+    <div align="right">{{ login_error_message }}</div>
+    {% endif %}
+    <br>
+    <hr>
+    <br>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>
