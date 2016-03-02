@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Recent Discussions -</h2>
+{% if discussions %}
+<!-- <table>
+<tr>
+<td>Topics</td>
+<td>Author</td>
+<td>Time</td>
+</tr> -->
+{% for discussion in discussions %}
+<!-- <tr> -->
+<a href="/discussions/{{ discussion.id }}">
+{{ discussion.topic }}</a> &nbsp; &nbsp; &nbsp;
+ by {{ discussion.author.name }} &nbsp; &nbsp; &nbsp;
+{{ discussion.timestamp.strftime('%Y-%m-%d at %H:%M') }}
+<br/>
+<!-- </table> -->
+{% endfor %}
+
+{% endif %}
+
+{% endblock %}

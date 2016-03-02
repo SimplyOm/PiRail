@@ -239,6 +239,26 @@ def feedpnrentry():
           return redirect('/feedback')
    return render_template('pnrentry.html',title='FEEDBACK',form=form,heading="Feedback",login=login)
 
+@app.route('/discussions/',methods=['GET','POST'])
+def discussions():
+  if 'pnr' in session:
+      login=True
+  else:
+      login=False
+  discussions=models.Discussion.query.order_by('timestamp desc').all()
+  return render_template('discussions.html',discussions=discussions)
+
+@app.route('/discussions/<discussion_id>',methods=['GET','POST'])
+def discussion(discussion_id):
+  if 'pnr' in session:
+      login=True
+  else:
+      login=False
+  if discussion_id:
+    discussion=models.Discussion.query.get(discussion_id)
+    discuss_messages=discussion.discuss_messages.all()
+  #discussions=models.Discussion.query.order_by('timestamp desc').all()
+  return render_template('discussion.html',discuss_messages=discuss_messages,discussion=discussion)
 
 
 @app.route('/feedback/<pnr>', methods=['GET', 'POST'])
