@@ -3,11 +3,12 @@ from app import app, db, models
 from .forms import LoginForm,PNREntry,ImmediateForm
 from .models import User,Chart
 from collections import deque
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
 import requests
 import json
 import time
-import serial
+import datetime
+#import serial
 import urllib2
 import cookielib
 '''
@@ -15,11 +16,11 @@ ser1 = serial.Serial(port = '/dev/ttyUSB0',baudrate = 9600, parity = serial.PARI
 ser2 = serial.Serial(port = '/dev/ttyACM0',baudrate = 115200, parity = serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
 '''
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(2,GPIO.OUT)
-GPIO.output(2,GPIO.LOW)
-GPIO.setup(3,GPIO.OUT)
-GPIO.output(3,GPIO.LOW)
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(2,GPIO.OUT)
+# GPIO.output(2,GPIO.LOW)
+# GPIO.setup(3,GPIO.OUT)
+# GPIO.output(3,GPIO.LOW)
 
 state=0
 railway_api_key='opyoo5828'
@@ -360,22 +361,68 @@ def feedpnrentry():
 def discussions():
   if 'pnr' in session:
       login=True
+      pnr=int(session['pnr'])
   else:
       login=False
+      pnr=None
   discussions=models.Discussion.query.order_by('timestamp desc').all()
-  return render_template('discussions.html',discussions=discussions)
+  if request.method=="POST":
+    topic=request.form["Topic"]
+    message=request.form["Message"]
+    if topic:
+      pass
+    else:
+      return render_template('discussions.html',discussions=discussions,discussion_error_message="Please enter a topic",login=login)
+    if message:
+      pass
+    else:
+      return render_template('discussions.html',discussions=discussions,discussion_error_message="Please enter a message",login=login)
+    if pnr:
+      users=models.Chart.query.all()
+      for user in users:
+        if user.pnr==pnr:
+          d1 = models.Discussion(topic=topic,message=message,timestamp=datetime.datetime.utcnow(), author=user)
+          db.session.add(d1)
+          db.session.commit()
+          discussions=models.Discussion.query.order_by('timestamp desc').all()
+          return render_template('discussions.html',discussions=discussions,discussion_error_message="",login=login)
+    else:
+      return render_template('discussions.html',discussions=discussions,discussion_error_message="Login First",login=login)
+  else:
+    return render_template('discussions.html',discussions=discussions,discussion_error_message="",login=login)
+      
 
 @app.route('/discussions/<discussion_id>',methods=['GET','POST'])
 def discussion(discussion_id):
   if 'pnr' in session:
       login=True
+      pnr=int(session['pnr'])
   else:
       login=False
+      pnr=None
   if discussion_id:
     discussion=models.Discussion.query.get(discussion_id)
     discuss_messages=discussion.discuss_messages.all()
+
+  if request.method=="POST":
+    message=request.form["Message"]
+    if message:
+      pass
+    else:
+      return render_template('discussion.html',discussion_messages=discussions,discussion=discussion,discuss_error_message="Please enter a message",login=login)
+    if pnr:
+      users=models.Chart.query.all()
+      for user in users:
+        if user.pnr==pnr:
+          dm1 = models.Discuss(message=message,timestamp=datetime.datetime.utcnow(),discussion=discussion,sender=user)
+          db.session.add(dm1)
+          db.session.commit()
+          discuss_messages=discussion.discuss_messages.all()
+          return render_template('discussion.html',discuss_messages=discuss_messages,discussion=discussion,discussion_error_message="",login=login)
+    else:
+      return render_template('discussion.html',discuss_messages=discuss_messages,discussion=discussion,discussion_error_message="Login First",login=login)
   #discussions=models.Discussion.query.order_by('timestamp desc').all()
-  return render_template('discussion.html',discuss_messages=discuss_messages,discussion=discussion)
+  return render_template('discussion.html',discuss_messages=discuss_messages,discussion=discussion,discussion_error_message="",login=login)
 
 
 @app.route('/feedback/<pnr>', methods=['GET', 'POST'])

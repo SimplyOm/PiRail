@@ -18,7 +18,18 @@
 <br/>
 <!-- </table> -->
 {% endfor %}
-
 {% endif %}
+<br/>
+New Discussion - 
+<br/><br/>
+<form method="POST" action="/discussions/">
+
+<div>Topic: <input type="text" name="Topic"></input></div>
+<div>Message: <input type="text" name="Message"></input></div>
+<div><input type="submit" value="Submit"></input></div>
+{{ discussion_error_message }}
+</form>
+
+
 
 {% endblock %}

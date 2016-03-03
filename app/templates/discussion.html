@@ -14,9 +14,17 @@
 <br/>
 
 {% for discuss_message in discuss_messages %}
-{{ discuss_message.message }} by {{ discuss_message.sender.name}} on {{ discuss_message.timestamp.strftime('%Y-%m-%d at %H:%M') }}
+{{ discuss_message.message }} <br/> - by {{ discuss_message.sender.name}} on {{ discuss_message.timestamp.strftime('%Y-%m-%d at %H:%M') }}
 <br/><br/>
 {% endfor %}
+<br/>
+ New Message - 
+<br/><br/>
+<form method="POST" action="/discussions/{{discussion.id}}">
 
+<div>Message: <input type="text" name="Message"></input></div>
+<div><input type="submit" value="Submit"></input></div>
+{{ discuss_error_message }}
+</form>
 
 {% endblock %}
