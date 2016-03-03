@@ -13,6 +13,5 @@ class PNREntry(Form):
     pnr = StringField('pnr', validators=[DataRequired()])
 
 class ImmediateForm(Form):
-    pnr = StringField('pnr', validators=[DataRequired()])
     typ = RadioField ('typ', choices=[('Food','Food'),('Medical','Medical'),('Cleanliness','Cleanliness'),('Security','Security')], validators=[DataRequired()])
     query= TextAreaField('feedback', validators=[DataRequired()])

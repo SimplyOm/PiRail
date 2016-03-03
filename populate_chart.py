@@ -2,7 +2,7 @@ from app import db,models
 u1 = models.Chart(name='Nitin',pnr=1409503636,mobile='8272859757',password='3636',seat=3)
 u2 = models.Chart(name='Aman',pnr=1409500404,mobile='8874671844',password='0404',seat=4)
 u3 = models.Chart(name='Harsh',pnr=1409501818,mobile='7754812482',password='1818',seat=18)
-u3 = models.Chart(name='Om',pnr=1409503737,mobile='7607986662',password='3737',seat=12,train='1331',start=26,end=79)
+u4 = models.Chart(name='Om',pnr=1409503737,mobile='7607986662',password='3737',seat=12)
 db.session.add(u1)
 db.session.add(u2)
 db.session.add(u3)

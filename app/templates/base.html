@@ -8,10 +8,11 @@
   </head>
   <body>
 <br>
-    <div align="center"><font size="5"><b><a href="/index">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/feedback">Feedback</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/immediate">Immediate</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/control">Controls</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/myyatrainfo">MyYatraInfo</a></b></font></div>
+    <div align="center"><font size="5"><b><a href="/index">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/feedback">Feedback</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/immediate">Immediate</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/control/none">Controls</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/myyatrainfo">MyYatraInfo</a></b></font></div>
     <br/>
     <div align="right">
     {% if login %}
+        Hi, {{name}}!<br>
         <a href="/logout">Logout</a>
     {% else %}
         <form action="/login" method="post" name="login">
@@ -25,18 +26,16 @@
     {% if login_error_message %}
     <div align="right">{{ login_error_message }}</div>
     {% endif %}
-    <br>
-    <hr>
-    <br>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
     <ul>
     {% for message in messages %}
-        <li>{{ message }} </li>
+        <li><h3>{{ message }} </h3></li>
     {% endfor %}
     </ul>
     {% endif %}
     {% endwith %}
+    <hr>
     {% block content %}{% endblock %}
   </body>
 </html>
