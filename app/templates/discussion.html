@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<strong>Discussion Message: </strong>{{ discussion.message }} <br/>
+<strong>Topic:</strong> {{ discussion.topic }} 
+<strong>Author:</strong> {{ discussion.author.name }}<br/>
+<strong>Time:</strong>{{ discussion.timestamp.strftime('%Y-%m-%d at %H:%M') }}
+<br/>
+<br/>
+<br/>
+<strong>Recent Messages - </strong> 
+<br/>
+<br/>
+
+{% for discuss_message in discuss_messages %}
+{{ discuss_message.message }} by {{ discuss_message.sender.name}} on {{ discuss_message.timestamp.strftime('%Y-%m-%d at %H:%M') }}
+<br/><br/>
+{% endfor %}
+
+
+{% endblock %}

@@ -9,7 +9,7 @@ import json
 import time
 import serial
 import urllib2
-
+import cookielib
 '''
 ser1 = serial.Serial(port = '/dev/ttyUSB0',baudrate = 9600, parity = serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
 ser2 = serial.Serial(port = '/dev/ttyACM0',baudrate = 115200, parity = serial.PARITY_NONE,stopbits=serial.STOPBITS_ONE,bytesize=serial.EIGHTBITS,timeout=1)
@@ -342,13 +342,63 @@ def feedpnrentry():
               name=p.name
               seat=p.seat
    if form.validate_on_submit():
+      pnr=form.pnr.data
+      users=models.Chart.query.all()
+      flag=0
+      for u in users:
+          if pnr==str(u.pnr):
+              flag=1
+              break
+      if flag:    
+          return redirect('/feedback/'+pnr)
+      else:
+          flash('Please provide a valid PNR number!')
+          return redirect('/feedback')
+   return render_template('pnrentry.html',title='FEEDBACK',form=form,heading="Feedback",login=login)
+
+@app.route('/discussions/',methods=['GET','POST'])
+def discussions():
+  if 'pnr' in session:
+      login=True
+  else:
+      login=False
+  discussions=models.Discussion.query.order_by('timestamp desc').all()
+  return render_template('discussions.html',discussions=discussions)
+
+@app.route('/discussions/<discussion_id>',methods=['GET','POST'])
+def discussion(discussion_id):
+  if 'pnr' in session:
+      login=True
+  else:
+      login=False
+  if discussion_id:
+    discussion=models.Discussion.query.get(discussion_id)
+    discuss_messages=discussion.discuss_messages.all()
+  #discussions=models.Discussion.query.order_by('timestamp desc').all()
+  return render_template('discussion.html',discuss_messages=discuss_messages,discussion=discussion)
+
+
+@app.route('/feedback/<pnr>', methods=['GET', 'POST'])
+def feedback(pnr):
+    if 'pnr' in session:
+      login=True
+    else:
+      login=False
+    form = LoginForm()
+    users=models.Chart.query.all()
+    name=''
+    for u in users:
+        if pnr==str(u.pnr):
+              name=u.name
+              break
+    if form.validate_on_submit():
         flash('Thank You %s for your valuable feedback' %
               (name))
         user = User(pnr=int(pnr), name=name, food=form.food.data,sanitation=form.sanitation.data,journey=form.journey.data,feedback=form.feedback.data)
 	db.session.add(user)
 	db.session.commit()
         return redirect('/index')
-   return render_template('feedback.html',title='FEEDBACK',name=name,form=form,pnr=pnr,login=login)
+    return render_template('feedback.html',title='FEEDBACK',name=name,form=form,pnr=pnr,login=login)
 
 def add_zero(x):
    if x>=10:
@@ -431,3 +481,30 @@ def myinfo(pnr):
    return render_template('myyatrainfo.html',title='MyYatraInfo',values=response_dict,login=login)
 
 
+def send_sms(number,message):
+  username="8272859757"
+  passwd="M2228S"
+  message = "+".join(message.split(' '))
+  url = 'http://site24.way2sms.com/Login1.action?'
+  data = 'username='+username+'&password='+passwd+'&Submit=Sign+in'
+
+  cj = cookielib.CookieJar()
+  opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+
+  opener.addheaders = [('User-Agent','Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36')]
+
+  try:
+      usock = opener.open(url, data)
+  except IOError:
+      return False
+
+  jession_id = str(cj).split('~')[1].split(' ')[0]
+  send_sms_url = 'http://site24.way2sms.com/smstoss.action?'
+  send_sms_data = 'ssaction=ss&Token='+jession_id+'&mobile='+number+'&message='+message+'&msgLen=136'
+  opener.addheaders = [('Referer', 'http://site25.way2sms.com/sendSMS?Token='+jession_id)]
+
+  try:
+      sms_sent_page = opener.open(send_sms_url,send_sms_data)
+  except IOError:
+      return False
+  return True
