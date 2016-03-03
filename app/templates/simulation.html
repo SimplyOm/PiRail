@@ -1,27 +1,23 @@
 <!-- extend base layout -->
 {% extends "base.html" %}
-
 {% block content %}
-
 <script>
 window.onload=function(){
 function sendData() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (xhttp.readyState == 4 && xhttp.status == 200) {
-     document.getElementById("fields").innerHTML = xhttp.responseText;
+     document.getElementById("final").innerHTML = xhttp.responseText;
     }
   };
-  xhttp.open("GET", "/updatestats", true);
+  xhttp.open("GET", "/updatesimulation", true);
   xhttp.send();
-}setInterval(sendData,1000)
+}setInterval(sendData,2000)
 };
+
 </script>
+	<h1 align="center">MyYatraInfo Simulation</h1>
 
-    <h1>Welcome to Indian Railways!</h1>
-    <br>
-    <h3>Team PiRail wishes you a Happy Journey!</h3>
 
-    <br>
-    <h3><div id="fields"></div></h3>
+	<div id="final"><H3></H3></div>
 {% endblock %}

@@ -7,9 +7,7 @@
     <form action="" method="post" name="immediate">
         {{ form.hidden_tag() }}
         <ol>
-	<p><li>Please enter your PNR Number: {{ form.pnr }}</li>{% for error in form.pnr.errors %}
-			<span style="color: red;">[{{ error }}]</span>
-		{% endfor %}</p>
+	<p><li>PNR Number: {{ pnr }}</li></p>
 	<p><li>Please select the type of your Emergency : {{ form.typ }}</li>{% for error in form.typ.errors %}
 			<span style="color: red;">[{{ error }}]</span>
 		{% endfor %}</p>

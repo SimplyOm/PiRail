@@ -3,7 +3,7 @@
 
 {% block content %}
 	<h1 align="center">MyYatraInfo</h1>
-	<h3 align="center">PNR No. : {{ values.pnr_info.pnr }}</h3><br>
+	<h3 align="center">PNR No. : {{ values.pnr_info.pnr }}<br></h3><h3>
 <pre>The name of your train is {{values.pnr_info.train_name}}({{values.pnr_info.train_num}}).
 You have {{values.pnr_info.total_passengers}} passengers in this ticket.
 {% if values.pnr_info.chart_prepared=="N" %}The chart has not been prepared yet.
@@ -38,4 +38,5 @@ Thank you.
 {% endif %}
 {% endif %}
 {% endif %}
+</h3>
 {% endblock %}
