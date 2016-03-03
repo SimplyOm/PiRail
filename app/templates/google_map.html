@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5JRotYZd-waPKD9EWUE4ZhNscYmYIfLs&callback=initMap"
+    async defer></script>
+    <script>
+    var initial_lat=25.2624715;
+    var initial_lng=82.983633;
+  function initMap() {
+  var myLatLng = {lat: initial_lat, lng: initial_lng};
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: myLatLng
+  });
+
+  var marker = new google.maps.Marker({
+    position: myLatLng,
+    map: map,
+    title: 'Hello World!'
+  });
+  function moveMarker(lat,lng) {
+    // var lat = parseFloat(document.getElementById('marker-latitude').value);
+    // var lng = parseFloat(document.getElementById('marker-longitude').value);
+    var newLatLng = new google.maps.LatLng(lat, lng);
+
+    marker.setPosition(newLatLng);
+    map.setCenter(newLatLng);
+}
+var i = 0, howManyTimes = 10;
+function f() {
+    //alert( "hi" );
+    moveMarker(initial_lat+(i/10),initial_lng+(i/10));
+    i++;
+    if( i < howManyTimes ){
+        setTimeout( f, 2000 );
+    }
+}
+f();
+}
+    </script>
+  </body>
+</html>
