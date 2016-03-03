@@ -1,14 +1,9 @@
-<html>
-  <head>
-    {% if title %}
-    <title>{{ title }}</title>
-    {% else %}
-    <title>Welcome To Indian Railways</title>
-    {% endif %}
-  </head>
-  <body>
-<br>
-    <div align="center"><font size="5"><b><a href="/index">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/feedback">Feedback</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/immediate">Immediate</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/control/none">Controls</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/myyatrainfo">MyYatraInfo</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/forum">Forum</a></b></font></div>
+<HTML>
+<HEAD>
+<TITLE>TICKET BOOKING COUNTER</TITLE>
+</HEAD>
+<BODY>
+<br><div align="center"><font size="5"><b><a href="/index">Home</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/feedback">Feedback</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/immediate">Immediate</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/control/none">Controls</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/myyatrainfo">MyYatraInfo</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/forum">Forum</a></b></font></div>
     <br/>
     <div align="right">
     {% if login %}
@@ -35,8 +30,5 @@
     </ul>
     {% endif %}
     {% endwith %}
-    <hr>
-    {% block content %}{% endblock %}
-  </body>
-</html>
-
+</BODY>
+</HTML>
